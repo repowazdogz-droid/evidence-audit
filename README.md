@@ -44,8 +44,16 @@ evidence-audit case-studies/03-loom-false-green-governor --cohort
 ```
 
 ```
-INERT   PASS  loom       explored=9        .../output-B-unshimmed-LOSTUPDATE-FALSE-GREEN.txt
+WEAK    PASS  loom       explored=9        .../output-A-unshimmed-clean.txt
+WEAK    PASS  loom       explored=9        .../output-B-unshimmed-LOSTUPDATE-FALSE-GREEN.txt
+WEAK    PASS  loom       explored=54       .../output-C-shimmed-clean.txt
+SOUND   FAIL  loom       explored=-        .../output-D-shimmed-LOSTUPDATE-caught.txt
+SOUND   PASS  loom       explored=41958    .../output-E-shimmed-clean-3threads.txt
 ```
+
+Runs sort by evidential strength, weakest first. B and C both report `1 passed`; B sorts
+below C because it explored a sixth as much. B and A are tied, which is the honest answer:
+one of them contains a lost update and their outputs are identical.
 
 The `--cohort` flag compares runs against each other. Without it, each run is graded only
 on its own output.
