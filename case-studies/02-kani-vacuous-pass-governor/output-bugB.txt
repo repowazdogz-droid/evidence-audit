@@ -1,0 +1,19 @@
+# Relevant checks (assertion.2 = A1 'first cell', assertion.3 = A2 'period boundary')
+Check 8: kani_spike::second_cell_admitted_iff_period_elapsed.assertion.2
+	 - Status: SUCCESS
+	 - Description: ""first cell was refused by a fresh limiter""
+Check 9: kani_spike::second_cell_admitted_iff_period_elapsed.assertion.3
+	 - Status: FAILURE
+	 - Description: ""second cell admission did not match the GCRA period boundary""
+
+SUMMARY:
+ ** 1 of 621 failed (3 unreachable)
+Failed Checks: "second cell admission did not match the GCRA period boundary"
+ File: "governor/src/kani_spike.rs", line 29, in kani_spike::second_cell_admitted_iff_period_elapsed
+
+VERIFICATION:- FAILED
+Verification Time: 0.95617056s
+
+Manual Harness Summary:
+Verification failed for - kani_spike::second_cell_admitted_iff_period_elapsed
+Complete - 0 successfully verified harnesses, 1 failures, 1 total.

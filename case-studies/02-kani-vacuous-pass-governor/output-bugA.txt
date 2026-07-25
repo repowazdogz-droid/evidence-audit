@@ -1,0 +1,11 @@
+SUMMARY:
+ ** 1 of 611 failed (6 unreachable)
+Failed Checks: "first cell was refused by a fresh limiter"
+ File: "governor/src/kani_spike.rs", line 24, in kani_spike::second_cell_admitted_iff_period_elapsed
+
+VERIFICATION:- FAILED
+Verification Time: 0.47980624s
+
+Manual Harness Summary:
+Verification failed for - kani_spike::second_cell_admitted_iff_period_elapsed
+Complete - 0 successfully verified harnesses, 1 failures, 1 total.

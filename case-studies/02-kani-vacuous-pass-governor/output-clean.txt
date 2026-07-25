@@ -1,0 +1,8 @@
+SUMMARY:
+ ** 0 of 609 failed (3 unreachable)
+
+VERIFICATION:- SUCCESSFUL
+Verification Time: 1.1706367s
+
+Manual Harness Summary:
+Complete - 1 successfully verified harnesses, 0 failures, 1 total.

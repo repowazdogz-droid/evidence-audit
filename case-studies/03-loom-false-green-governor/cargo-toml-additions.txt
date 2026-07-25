@@ -1,0 +1,8 @@
+# Appended to governor/governor/Cargo.toml. BOTH are required.
+[target.'cfg(loom)'.dependencies]
+loom = "0.7.2"
+
+# governor sets #![deny(warnings)]; without this, `--cfg loom` / `--cfg kani`
+# fail the build with "unexpected `cfg` condition name".
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)', 'cfg(loom)'] }

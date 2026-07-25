@@ -1,0 +1,11 @@
+--- /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/governor/governor/src/gcra.rs	2026-07-24 23:30:54
++++ /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/governor-bugged-b/governor/src/gcra.rs	2026-07-24 23:39:14
+@@ -114,7 +114,7 @@
+         let t = self.t;
+         state.measure_and_replace(key, |tat| {
+             let tat = tat.unwrap_or(t0);
+-            let earliest_time = tat.saturating_sub(tau);
++            let earliest_time = tat.saturating_sub(tau + t);
+             if t0 < earliest_time {
+                 Err(MW::disallow(
+                     key,

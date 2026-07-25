@@ -1,0 +1,13 @@
+--- /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/governor/governor/src/state/in_memory.rs	2026-07-24 23:30:54
++++ /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/gov-shim/governor/src/state/in_memory.rs	2026-07-24 23:55:17
+@@ -6,7 +6,10 @@
+ use core::sync::atomic::Ordering;
+ use core::time::Duration;
+ 
++#[cfg(not(loom))]
+ use portable_atomic::AtomicU64;
++#[cfg(loom)]
++use loom::sync::atomic::AtomicU64;
+ 
+ /// An in-memory representation of a GCRA's rate-limiting state.
+ ///

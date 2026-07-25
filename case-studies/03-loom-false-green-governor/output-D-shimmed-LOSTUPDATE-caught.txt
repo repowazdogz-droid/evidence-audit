@@ -1,0 +1,17 @@
+running 1 test
+
+thread 'at_most_one_cell_admitted_at_t0' (24415691) panicked at governor/tests/loom_spike.rs:30:9:
+assertion `left == right` failed: expected exactly 1 admitted cell at t=0, got 2
+  left: 2
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test at_most_one_cell_admitted_at_t0 ... FAILED
+
+failures:
+
+failures:
+    at_most_one_cell_admitted_at_t0
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--test loom_spike`

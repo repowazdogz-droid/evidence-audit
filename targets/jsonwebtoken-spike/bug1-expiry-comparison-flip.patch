@@ -1,0 +1,11 @@
+--- /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/jsonwebtoken/src/validation.rs	2026-07-25 11:44:16
++++ /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/jwt-bug1/src/validation.rs	2026-07-25 11:51:59
+@@ -281,7 +281,7 @@
+         }
+ 
+         if matches!(claims.exp, TryParse::Parsed(exp) if options.validate_exp
+-            && exp - options.reject_tokens_expiring_in_less_than < now - options.leeway)
++            && exp - options.reject_tokens_expiring_in_less_than > now - options.leeway)
+         {
+             return Err(new_error(ErrorKind::ExpiredSignature));
+         }

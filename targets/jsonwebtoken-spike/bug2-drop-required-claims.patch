@@ -1,0 +1,14 @@
+--- /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/jsonwebtoken/src/validation.rs	2026-07-25 11:44:16
++++ /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/jwt-bug2/src/validation.rs	2026-07-25 11:51:59
+@@ -259,9 +259,8 @@
+             _ => continue,
+         };
+ 
+-        if !present {
+-            return Err(new_error(ErrorKind::MissingRequiredClaim(required_claim.clone())));
+-        }
++        // INJECTED BUG 2: required-claim enforcement removed.
++        let _ = present;
+     }
+ 
+     if options.validate_exp || options.validate_nbf {

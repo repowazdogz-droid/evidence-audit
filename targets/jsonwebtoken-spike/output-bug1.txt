@@ -1,0 +1,20 @@
+Check 316: validation::kani_spike::ok_implies_exp_within_leeway.assertion.1
+	 - Status: SUCCESS
+	 - Description: ""A1: accepted a token with no exp while exp was required""
+Check 317: validation::kani_spike::ok_implies_exp_within_leeway.assertion.2
+	 - Status: SUCCESS
+	 - Description: "attempt to subtract with overflow"
+Check 318: validation::kani_spike::ok_implies_exp_within_leeway.assertion.3
+	 - Status: FAILURE
+	 - Description: ""A2: accepted a token whose exp is before now - leeway""
+
+SUMMARY:
+ ** 1 of 3300 failed (46 unreachable)
+Failed Checks: "A2: accepted a token whose exp is before now - leeway"
+ File: "src/validation.rs", line 913, in validation::kani_spike::ok_implies_exp_within_leeway
+
+VERIFICATION:- FAILED
+Verification Time: 384.3682s
+
+Manual Harness Summary:
+Verification failed for - validation::kani_spike::ok_implies_exp_within_leeway

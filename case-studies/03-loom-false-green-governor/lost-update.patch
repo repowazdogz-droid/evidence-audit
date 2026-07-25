@@ -1,0 +1,28 @@
+--- /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/governor/governor/src/state/in_memory.rs	2026-07-24 23:30:54
++++ /private/tmp/claude-501/-Users-warre/987f3b0a-d2a4-4093-a2a8-f85cd74ede76/scratchpad/spike/targets/gov-lost/governor/src/state/in_memory.rs	2026-07-24 23:54:33
+@@ -24,19 +24,12 @@
+     where
+         F: FnMut(Option<Nanos>) -> Result<(T, Nanos), E>,
+     {
+-        let mut prev = self.0.load(Ordering::Acquire);
+-        let mut decision = f(NonZeroU64::new(prev).map(|n| n.get().into()));
+-        while let Ok((result, new_data)) = decision {
+-            match self.0.compare_exchange_weak(
+-                prev,
+-                new_data.into(),
+-                Ordering::Release,
+-                Ordering::Relaxed,
+-            ) {
+-                Ok(_) => return Ok(result),
+-                Err(next_prev) => prev = next_prev,
+-            }
+-            decision = f(NonZeroU64::new(prev).map(|n| n.get().into()));
++        // INJECTED LOST-UPDATE BUG: read-modify-write with no compare-exchange.
++        let prev = self.0.load(Ordering::Acquire);
++        let decision = f(NonZeroU64::new(prev).map(|n| n.get().into()));
++        if let Ok((result, new_data)) = decision {
++            self.0.store(new_data.into(), Ordering::Release);
++            return Ok(result);
+         }
+         // This map shouldn't be needed, as we only get here in the error case, but the compiler
+         // can't see it.
