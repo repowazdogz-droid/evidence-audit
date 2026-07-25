@@ -1,4 +1,4 @@
-# jsonwebtoken — Kani stubbing spike (pipeline target, confirmed)
+# jsonwebtoken: Kani stubbing spike (pipeline target, confirmed)
 
 Materials behind decision **D169**. Confirms that Kani function stubbing (RFC-0002) reaches
 the real `validate()` path in `jsonwebtoken` v11.0.0.
@@ -7,7 +7,7 @@ the real `validate()` path in `jsonwebtoken` v11.0.0.
 (= tag `v11.0.0`, `version = "11.0.0"`), MIT.
 **Tool:** `kani 0.67.0`, aarch64-apple-darwin. **Date:** 2026-07-25.
 
-Not an evidence-audit case study — this is the pipeline target's feasibility spike. Kept
+Not an evidence-audit case study. This is the pipeline target's feasibility spike. Kept
 outside `~/evidence-audit-cases/` for that reason.
 
 ## Property
@@ -24,8 +24,8 @@ with `now` supplied by a stub replacing the wall-clock `get_current_timestamp()`
 | Run | A1 | A2 | Verdict | Time |
 |---|---|---|---|---|
 | clean v11.0.0 | SUCCESS | SUCCESS | `0 of 3300 failed (46 unreachable)` | 271 s |
-| bug 1 — expiry comparison `<` → `>` | **SUCCESS** | **FAILURE** | `1 of 3300 failed` | 384 s |
-| bug 2 — required-claim enforcement dropped | **FAILURE** | **SUCCESS** | `1 of 3299 failed` | 317 s |
+| bug 1, expiry comparison `<` → `>` | **SUCCESS** | **FAILURE** | `1 of 3300 failed` | 384 s |
+| bug 2, required-claim enforcement dropped | **FAILURE** | **SUCCESS** | `1 of 3299 failed` | 317 s |
 
 Each control fails its own assertion **with the other still exercised and passing in the same
 run**. That is the point: one control is not enough to characterise a two-assertion harness.
@@ -41,7 +41,7 @@ Clean run integrity: unwinding assertions present and passing, both assertions r
    Fix: stub `std::collections::hash_map::RandomState::new` with a zeroed instance
    (`RandomState` is two `u64` keys; all-zero is valid and deterministic).
 2. **hashbrown probe-loop divergence.** With the FFI cleared, CBMC diverges unwinding
-   `hashbrown::raw::RawTableInner::find_or_find_insert_slot_inner` — killed at **iteration
+   `hashbrown::raw::RawTableInner::find_or_find_insert_slot_inner`, killed at **iteration
    798** after >10 min with no verdict (`output-diverged-no-unwind-bound.log`).
    Fix: `#[kani::unwind(10)]`. This bound is **load-bearing**: without it the harness does not
    terminate. It is sound here only because the unwinding assertions pass; if a future change
@@ -58,7 +58,7 @@ Clean run integrity: unwinding assertions present and passing, both assertions r
     panicked at src/validation.rs:284:68: attempt to subtract with overflow
     CONTROL: validate returned Ok(())        <- control passes in the same run
 
-Release build (`--release`, overflow-checks off) wraps and returns `Err(ExpiredSignature)` —
+Release build (`--release`, overflow-checks off) wraps and returns `Err(ExpiredSignature)`,
 fail-closed. Requires a caller to set `leeway` above the current Unix time (≈1.78×10⁹ s ≈ 56
 years); the default is 60. **This is a debug-build panic on an absurd configuration, not an
 authentication bypass, and no defect claim is made beyond that.**
@@ -82,7 +82,7 @@ patch -p1 < bug2-drop-required-claims.patch    && cargo kani -Z stubbing --harne
 ```
 
 Patch headers carry absolute scratch paths (`diff -u` between working copies); apply with
-`patch -p<n>` or re-create by hand — bug 1 is one character (`<`→`>`) at line 284, bug 2
+`patch -p<n>` or re-create by hand. Bug 1 is one character (`<`→`>`) at line 284, bug 2
 deletes the three-line `if !present { return Err(...) }` block.
 
 ## Scope of the clean result

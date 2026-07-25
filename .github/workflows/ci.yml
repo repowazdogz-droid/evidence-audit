@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e . pytest
+      - name: Acceptance test - case 03 loom discriminator
+        run: python -m pytest tests/test_case03_loom_discriminator.py -v
+      - name: Acceptance test - case 02 Kani vacuous pass
+        run: python -m pytest tests/test_case02_kani_vacuous.py -v
+      - name: Full suite
+        run: python -m pytest tests/ -q
+      - name: CLI smoke test
+        run: |
+          evidence-audit case-studies/03-loom-false-green-governor --cohort
+          evidence-audit case-studies/02-kani-vacuous-pass-governor

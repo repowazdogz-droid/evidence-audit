@@ -1,7 +1,7 @@
-# Case 03 — A concurrency model checker that passed while modelling nothing
+# Case 03. A concurrency model checker that passed while modelling nothing
 
-**What this case exhibits:** the headline exhibit is `output-B-unshimmed-LOSTUPDATE-FALSE-GREEN.txt`
-— loom reports `1 passed` on a build containing a textbook lost update. The test runs, prints
+**What this case exhibits:** the headline exhibit is `output-B-unshimmed-LOSTUPDATE-FALSE-GREEN.txt`:
+loom reports `1 passed` on a build containing a textbook lost update. The test runs, prints
 green, and cannot fail, because the atomic it is supposed to be modelling is not a loom atomic.
 Nothing in loom's output says so.
 
@@ -18,8 +18,8 @@ real one is the execution counter and the negative control.
 
 | | clean upstream code | injected lost update |
 |---|---|---|
-| **no `cfg(loom)` shim** | PASS — `LOOM EXPLORED 9 EXECUTIONS` (`output-A`) | **PASS — `LOOM EXPLORED 9 EXECUTIONS` (`output-B`) ← THE EXHIBIT** |
-| **`cfg(loom)` shim applied** | PASS — `LOOM EXPLORED 54 EXECUTIONS` (`output-C`) | **FAIL — `got 2` (`output-D`)** |
+| **no `cfg(loom)` shim** | PASS, `LOOM EXPLORED 9 EXECUTIONS` (`output-A`) | **PASS, `LOOM EXPLORED 9 EXECUTIONS` (`output-B`) ← THE EXHIBIT** |
+| **`cfg(loom)` shim applied** | PASS, `LOOM EXPLORED 54 EXECUTIONS` (`output-C`) | **FAIL, `got 2` (`output-D`)** |
 
 Scaling, shimmed and clean: 3 threads → `LOOM EXPLORED 41958 EXECUTIONS`, 7.81 s (`output-E`).
 2→3 threads is a ~777× increase in explored executions; 4 threads is very likely out of reach.
@@ -46,23 +46,23 @@ cd governor && git checkout 9f3a79dd47dd32acd589c562b8d4fefe99b93372
 cp /path/to/loom_spike_2threads.rs governor/tests/loom_spike.rs
 cat /path/to/cargo-toml-additions.txt >> governor/Cargo.toml
 
-# 2. run A — unshimmed, clean  → passes, 9 executions
+# 2. run A, unshimmed, clean  → passes, 9 executions
 cd governor && RUSTFLAGS="--cfg loom" cargo test --test loom_spike -- --nocapture
 
-# 3. run B — unshimmed + lost update → STILL PASSES. the exhibit.
+# 3. run B, unshimmed + lost update → STILL PASSES. the exhibit.
 git apply ../lost-update.patch
 RUSTFLAGS="--cfg loom" cargo test --test loom_spike -- --nocapture
 git checkout src/state/in_memory.rs
 
-# 4. run C — shim + clean → passes, 54 executions
+# 4. run C, shim + clean → passes, 54 executions
 git apply ../shim-cfg-loom.patch
 RUSTFLAGS="--cfg loom" cargo test --test loom_spike -- --nocapture
 
-# 5. run D — shim + lost update → FAILS "got 2"
+# 5. run D, shim + lost update → FAILS "got 2"
 git apply ../lost-update.patch
 RUSTFLAGS="--cfg loom" cargo test --test loom_spike -- --nocapture
 
-# 6. run E — shim + clean, 3 threads → 41958 executions
+# 6. run E, shim + clean, 3 threads → 41958 executions
 git checkout src/state/in_memory.rs && git apply ../shim-cfg-loom.patch
 cp /path/to/loom_spike_3threads.rs tests/loom_spike.rs
 RUSTFLAGS="--cfg loom" cargo test --test loom_spike -- --nocapture
@@ -85,5 +85,5 @@ The shimmed result is an exhaustive search over the interleavings loom models, b
 2–3 threads, over `InMemoryState` only. It is not a proof. The keyed `DashMapStateStore` is
 out of scope: its concurrency lives in third-party `dashmap` (6.2.1 vendored source contains
 zero `loom` references, so it cannot be instrumented without patching another crate).
-`FakeRelativeClock` remains an uninstrumented `Arc<portable_atomic::AtomicU64>` — unmodelled,
+`FakeRelativeClock` remains an uninstrumented `Arc<portable_atomic::AtomicU64>`, unmodelled
 not wrong, because this test never advances the clock concurrently.
