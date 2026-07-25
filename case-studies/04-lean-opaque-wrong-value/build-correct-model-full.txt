@@ -1,0 +1,7 @@
+info: NoPanicRemodel.lean:228:0: 'NoPanicRemodel.type_to_size_no_panic_uncond' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: NoPanicRemodel.lean:229:0: 'NoPanicRemodel.size_no_panic_uncond' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: NoPanicRemodel.lean:230:0: 'NoPanicRemodel.parse_one_no_panic_uncond' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: NoPanicRemodel.lean:231:0: 'NoPanicRemodel.parse_one_no_panic' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: NoPanicRemodel.lean:260:0: 'NoPanicRemodel.size_of_binder_buffer_object' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: NoPanicRemodel.lean:261:0: 'NoPanicRemodel.type_to_size_ptr' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (1697 jobs).

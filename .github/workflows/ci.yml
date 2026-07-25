@@ -18,6 +18,8 @@ jobs:
         run: python -m pytest tests/test_case03_loom_discriminator.py -v
       - name: Acceptance test - case 02 Kani vacuous pass
         run: python -m pytest tests/test_case02_kani_vacuous.py -v
+      - name: Acceptance test - case 04 Lean opaque wrong value
+        run: python -m pytest tests/test_case04_lean_opaque.py -v
       - name: Full suite
         run: python -m pytest tests/ -q
       - name: CLI smoke test

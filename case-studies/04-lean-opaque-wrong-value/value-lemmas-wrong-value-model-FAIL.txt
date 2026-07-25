@@ -1,0 +1,62 @@
+error: NoPanicRemodel.lean:244:0: Not a definitional equality: the left-hand side
+  core.mem.size_of uapi.flat_binder_object
+is not definitionally equal to the right-hand side
+  ok 24#usize
+error: NoPanicRemodel.lean:245:62: Type mismatch
+  rfl
+has type
+  ?m.8 = ?m.8
+but is expected to have type
+  core.mem.size_of uapi.flat_binder_object = ok 24#usize
+error: NoPanicRemodel.lean:246:0: Not a definitional equality: the left-hand side
+  core.mem.size_of uapi.binder_fd_object
+is not definitionally equal to the right-hand side
+  ok 24#usize
+error: NoPanicRemodel.lean:247:60: Type mismatch
+  rfl
+has type
+  ?m.8 = ?m.8
+but is expected to have type
+  core.mem.size_of uapi.binder_fd_object = ok 24#usize
+error: NoPanicRemodel.lean:248:0: Not a definitional equality: the left-hand side
+  core.mem.size_of uapi.binder_buffer_object
+is not definitionally equal to the right-hand side
+  ok 40#usize
+error: NoPanicRemodel.lean:249:64: Type mismatch
+  rfl
+has type
+  ?m.8 = ?m.8
+but is expected to have type
+  core.mem.size_of uapi.binder_buffer_object = ok 40#usize
+error: NoPanicRemodel.lean:250:0: Not a definitional equality: the left-hand side
+  core.mem.size_of uapi.binder_fd_array_object
+is not definitionally equal to the right-hand side
+  ok 32#usize
+error: NoPanicRemodel.lean:251:66: Type mismatch
+  rfl
+has type
+  ?m.8 = ?m.8
+but is expected to have type
+  core.mem.size_of uapi.binder_fd_array_object = ok 32#usize
+error: NoPanicRemodel.lean:252:0: Not a definitional equality: the left-hand side
+  core.mem.size_of Usize
+is not definitionally equal to the right-hand side
+  ok 8#usize
+error: NoPanicRemodel.lean:253:47: Type mismatch
+  rfl
+has type
+  ?m.8 = ?m.8
+but is expected to have type
+  core.mem.size_of Usize = ok 8#usize
+error: NoPanicRemodel.lean:258:39: Tactic `rfl` failed: The left-hand side
+  match 1886661253#u32 with
+  | 2002922117#32#uscalar => do
+    let i ← core.mem.size_of uapi.flat_binder_object
+    ok (some i)
+  | 1935813253#32#uscalar => do
+    let i ← core.mem.size_of uapi.flat_binder_object
+--
+error: Lean exited with code 1
+Some required targets logged failures:
+- NoPanicRemodel
+error: build failed

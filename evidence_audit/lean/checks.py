@@ -79,10 +79,13 @@ def check_opaque_in_cone(sources: dict[str, str], theorems: list[str]) -> CheckR
     """
     res = CheckResult(check="a:opaque-in-cone", outcome="PASS")
     res.blind_spots = [
-        "identifier matching is textual, so the reported cone over-approximates the real one",
-        "an opaque constant reached only through a typeclass instance or an elaborated "
-        "implicit will be missed entirely",
-        "does not invoke Lean; a PASS here is not a statement about the kernel",
+        "identifier matching is textual, so within the given sources the cone "
+        "over-approximates: a name mentioned but not actually depended on is followed",
+        "the cone also UNDER-approximates across the environment: anything declared "
+        "outside the sources passed in is invisible, as is any dependency introduced "
+        "by elaboration (typeclass instances, implicits, tactic-generated terms)",
+        "does not invoke Lean; a PASS here is not a statement about the kernel. It is "
+        "worth something only when checked against Lean's own audit, as case 04 does",
     ]
 
     bodies = _declaration_bodies(sources)

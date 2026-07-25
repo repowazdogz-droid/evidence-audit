@@ -3,8 +3,8 @@
 ## v0.1 (this release)
 
 Reads recorded outputs and grades them. Analyzers for Kani, loom and `cargo test`. Four
-Lean checks over recorded artifacts. Two acceptance tests running in CI against the case
-studies.
+Lean checks over recorded artifacts. Three acceptance tests running in CI against the four
+case studies, covering all three demonstrated catches.
 
 ## Deferred from v0.1
 
@@ -13,11 +13,6 @@ rather than inferring it from exploration counts. This is the check the whole to
 pointed at, and it is out of v0.1 because doing it properly means running the verifier
 with a mutated property and comparing, not reading a recorded output. That makes it a
 tool runner, which v0.1 deliberately is not.
-
-**A Lean case study.** Check (a) is implemented and unit-tested but has no recorded
-instance in this repository, so the README does not claim it as a demonstrated catch. The
-next case study should be a real Lean development where an `opaque` declaration stands in
-the dependency cone of a theorem that appears to prove something about a real value.
 
 **Instrumented-operation counts from loom.** v0.1 reads a harness-emitted
 `LOOM INSTRUMENTED OPS:` line, which nothing in stock loom produces. Either a small loom

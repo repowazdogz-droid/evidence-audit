@@ -10,7 +10,7 @@ grades the run on that basis. It also runs four checks over recorded Lean artifa
 
 Version 0.1. It reads recorded outputs. It does not run any verifier.
 
-## Two catches, both demonstrated in this repository
+## Three catches, all demonstrated in this repository
 
 Each has its inputs, its patches, its outputs and its reproduction commands under
 `case-studies/`. Every output file was produced by running the named tool on the code in
@@ -29,12 +29,17 @@ where the first injected bug fails assertion 1 and leaves assertion 2 UNREACHABL
 Assertion 2's status in that run carries no information about the property it states. One
 control was mistaken for two until a second, independent bug was built.
 
-`case-studies/01-kani-sequential-jsonwebtoken/` is the baseline both are measured against:
-a harness where each assertion is separately shown to have its own failing mode.
+**An axiom audit that could not tell a faithful model from a wrong one**
+(`case-studies/04-lean-opaque-wrong-value/`). Two Lean models of the same Rust function,
+one pinning the real per-type sizes and one returning 0 for every type. Both prove the same
+no-panic theorem, and `#print axioms` returns byte-identical output for both, same SHA-256.
+What distinguished them was a set of value lemmas proved by `rfl`, which fail to compile on
+the wrong model. An earlier model put the size behind an `opaque` declaration, which has no
+value to check and never appears in `#print axioms` at all; a twelve-line probe in that case
+reproduces the invisibility with no dependencies.
 
-**Not demonstrated here:** a Lean check catching an `opaque` declaration standing in for a
-real value. Check (a) below is implemented and unit-tested, but no case study for it is
-staged in this repository, so it is not claimed as a catch.
+`case-studies/01-kani-sequential-jsonwebtoken/` is the baseline the others are measured
+against: a harness where each assertion is separately shown to have its own failing mode.
 
 ## What it does
 
@@ -102,6 +107,8 @@ here", not as "this run is wrong".
 | (c) placeholder scan | IN, lexical | No `sorry`, `admit`, `native_decide` or `#exit` outside comments | Token-level. A placeholder introduced by a macro is invisible. Reports presence, not reachability |
 | (d) axiom-policy diff | IN, strongest of the four | Every named theorem has a reported axiom line, and every axiom is within policy | Parses a recorded capture, so a stale capture grades as current. Says nothing about whether the theorem states the intended property |
 | (e) vacuity probe | OUT of v0.1 | | See `ROADMAP.md` |
+
+Case 04 is what checks (a) and (d) are for, and it shows their division of labour. Check (d) returns the same PASS for both models, which is correct: an axiom audit reports what the kernel trusted, and both models trusted the same things. Check (a) reaches the one thing the audit cannot see, because an `opaque` declaration is not an axiom.
 
 Check (d) carries the hazard that motivated it. `#print axioms Foo` reports the fully
 qualified name, so `'Ns.Foo' depends on axioms: [...]`. A naive exact-name grep finds

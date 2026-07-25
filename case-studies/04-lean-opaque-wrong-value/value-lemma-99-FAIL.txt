@@ -1,0 +1,16 @@
+error: NoPanicRemodel.lean:244:0: Not a definitional equality: the left-hand side
+  core.mem.size_of uapi.flat_binder_object
+is not definitionally equal to the right-hand side
+  ok 99#usize
+error: NoPanicRemodel.lean:245:62: Type mismatch
+  rfl
+has type
+  ?m.8 = ?m.8
+but is expected to have type
+  core.mem.size_of uapi.flat_binder_object = ok 99#usize
+info: NoPanicRemodel.lean:260:0: 'NoPanicRemodel.size_of_binder_buffer_object' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: NoPanicRemodel.lean:261:0: 'NoPanicRemodel.type_to_size_ptr' depends on axioms: [propext, Classical.choice, Quot.sound]
+error: Lean exited with code 1
+Some required targets logged failures:
+- NoPanicRemodel
+error: build failed
