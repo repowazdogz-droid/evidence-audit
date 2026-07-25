@@ -27,10 +27,18 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     files: list[Path] = []
+    skipped: list[Path] = []
     for raw in args.paths:
         p = Path(raw)
         if p.is_dir():
-            files.extend(sorted(q for q in p.rglob("*") if q.is_file() and q.suffix in (".txt", ".log")))
+            # Directory scans take files named by the recorded-output convention.
+            # Anything else in the directory is reported as skipped rather than
+            # silently dropped: a grader that quietly ignores inputs is the shape
+            # of bug this tool exists to find.
+            for q in sorted(p.rglob("*")):
+                if not q.is_file() or q.suffix not in (".txt", ".log"):
+                    continue
+                (files if q.name.startswith("output-") else skipped).append(q)
         else:
             files.append(p)
 
@@ -46,6 +54,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.json:
         print(json.dumps([r.to_dict() for r in records], indent=2))
         return 0
+
+    if skipped:
+        print(
+            f"skipped {len(skipped)} file(s) in the scanned directories that do not follow "
+            f"the 'output-*' recording convention: "
+            + ", ".join(q.name for q in skipped)
+        )
 
     for r in sorted(records, key=evidence_score):
         grade = r.grade.name if r.grade else "?"
