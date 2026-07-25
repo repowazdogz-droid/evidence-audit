@@ -16,12 +16,21 @@ Each has its inputs, its patches, its outputs and its reproduction commands unde
 `case-studies/`. Every output file was produced by running the named tool on the code in
 the patch beside it.
 
-**A concurrency model checker that passed while modelling nothing**
-(`case-studies/03-loom-false-green-governor/`). A loom test reports `1 passed` on a build
-containing a textbook lost update, because the atomic under test was never
-loom-instrumented. The clean run and the broken run produce byte-identical output. What
-separates them is an execution count: 9 explored interleavings uninstrumented against 54
-instrumented, on the same test.
+**An axiom audit that could not tell a faithful model from a wrong one**
+(`case-studies/04-lean-opaque-wrong-value/`). Two Lean models of the same Rust function,
+one pinning the real per-type sizes from the kernel UAPI layout, one returning 0 for every
+type. Both prove the same no-panic theorem. **Five lines changed, zero bytes of difference
+in the audit:**
+
+```
+b4faba10a3aeab78d9d349eed25f8ccbced39c6bdd44cda724af028d14231798  axioms-correct-model.txt
+b4faba10a3aeab78d9d349eed25f8ccbced39c6bdd44cda724af028d14231798  axioms-wrong-value-model.txt
+```
+
+What distinguished them was a set of value lemmas proved by `rfl`, which fail to compile on
+the wrong model. An earlier model put the size behind an `opaque` declaration, which has no
+value to check and never appears in `#print axioms` at all; a twelve-line probe in that case
+reproduces the invisibility with no dependencies.
 
 **A passing assertion that was never reached**
 (`case-studies/02-kani-vacuous-pass-governor/`). A Kani harness with two assertions,
@@ -29,14 +38,12 @@ where the first injected bug fails assertion 1 and leaves assertion 2 UNREACHABL
 Assertion 2's status in that run carries no information about the property it states. One
 control was mistaken for two until a second, independent bug was built.
 
-**An axiom audit that could not tell a faithful model from a wrong one**
-(`case-studies/04-lean-opaque-wrong-value/`). Two Lean models of the same Rust function,
-one pinning the real per-type sizes and one returning 0 for every type. Both prove the same
-no-panic theorem, and `#print axioms` returns byte-identical output for both, same SHA-256.
-What distinguished them was a set of value lemmas proved by `rfl`, which fail to compile on
-the wrong model. An earlier model put the size behind an `opaque` declaration, which has no
-value to check and never appears in `#print axioms` at all; a twelve-line probe in that case
-reproduces the invisibility with no dependencies.
+**A concurrency model checker that passed while modelling nothing**
+(`case-studies/03-loom-false-green-governor/`). A loom test reports `1 passed` on a build
+containing a textbook lost update, because the atomic under test was never
+loom-instrumented. The clean run and the broken run produce byte-identical output. What
+separates them is an execution count: 9 explored interleavings uninstrumented against 54
+instrumented, on the same test.
 
 `case-studies/01-kani-sequential-jsonwebtoken/` is the baseline the others are measured
 against: a harness where each assertion is separately shown to have its own failing mode.

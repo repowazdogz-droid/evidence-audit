@@ -25,6 +25,11 @@ Fork and branches used:
   `size_of` is `opaque rustSizeOf (T : Type) : Std.Usize`, an unspecified value. Used here
   for check (a).
 
+Neither branch exists in the upstream repository. `git ls-remote --heads` on
+`runtimeverification/kernel-rust-verification-spike` returns `main`, `improve-reports` and
+`union-free-remodel` only. Both branches used here are ours, on the fork, so do not look
+for them upstream.
+
 Environment: Lean `v4.31.0`, Aeneas at `c2015b86`, mathlib per Aeneas's pin, Darwin 24.6.0
 arm64. Recorded 2026-07-25.
 
