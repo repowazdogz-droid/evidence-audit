@@ -6,8 +6,8 @@ implied. These are not hypotheticals and not reconstructions: every output file 
 produced by running the tool on the code in the patch beside it, on this machine, on the
 date in the case README.
 
-Staged 2026-07-25 from a scoping session. **No tool code exists yet** — this directory is
-collection only.
+Collected 2026-07-25. The grader in `evidence_audit/` reads these recorded outputs; the
+case directories hold the inputs, patches, outputs and reproduction commands.
 
 ## Cases
 
