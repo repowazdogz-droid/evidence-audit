@@ -1,5 +1,27 @@
 # evidence-audit
 
+A loom test prints `1 passed` on a build with a lost update; evidence-audit ranks it below the instrumented pass: 9 interleavings explored against 54.
+
+[![CI](https://img.shields.io/github/actions/workflow/status/repowazdogz-droid/evidence-audit/ci.yml?branch=main&label=CI)](https://github.com/repowazdogz-droid/evidence-audit/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/repowazdogz-droid/evidence-audit)](https://github.com/repowazdogz-droid/evidence-audit/releases/latest)
+
+## Try it
+
+Needs Python 3.10 or newer. From a fresh clone:
+
+```sh
+python3 -m venv .venv && . .venv/bin/activate
+python -m pip install -q -e .
+evidence-audit case-studies/03-loom-false-green-governor --cohort
+```
+
+The five recorded loom runs of case 03 print weakest first. The lost-update run
+(`output-B-...`) grades `WEAK PASS explored=9`, below the instrumented clean run
+(`output-C-...`, `explored=54`). Run B is also tied with the clean uninstrumented run A,
+because their outputs are identical; see [What this does not show](#what-this-does-not-show).
+
+## What it is
+
 Grades recorded verification outputs by what they actually establish, rather than by the
 verdict they print.
 
@@ -50,10 +72,7 @@ against: a harness where each assertion is separately shown to have its own fail
 
 ## What it does
 
-```sh
-pip install -e .
-evidence-audit case-studies/03-loom-false-green-governor --cohort
-```
+The Try it command prints, with the per-run flag lines omitted:
 
 ```
 WEAK    PASS  loom       explored=9        .../output-A-unshimmed-clean.txt
@@ -122,7 +141,20 @@ qualified name, so `'Ns.Foo' depends on axioms: [...]`. A naive exact-name grep 
 nothing, and "found nothing" is textually identical to "no axioms". A required theorem
 with no reported line resolves to `UNKNOWN`, never to `PASS`.
 
-## The honest limit of v0.1
+## What this does not show
+
+- **It does not run any verifier.** It grades recorded outputs, so it cannot see anything
+  absent from a capture, and a stale capture grades as current.
+- **It does not separate a clean run from a broken run when their outputs are identical.**
+  See the next paragraph.
+- **A PASS from any check is not a proof that the property holds.** Each check's blind spot
+  is in the table above; the Lean checks (a) to (c) are textual or lexical, and (a) reports
+  candidates only.
+- **Which runs are comparable is the caller's claim**, not something the tool infers. A
+  demotion means less was explored, not that the run is wrong.
+- **No defect in `governor` or `jsonwebtoken` is claimed.** Every bug in the case studies was
+  injected deliberately into a local copy.
+- **The vacuity probe, check (e), is not in v0.1.** See `ROADMAP.md`.
 
 In case 03, the clean uninstrumented run and the lost-update uninstrumented run receive
 **identical grades**, because their outputs are identical. The tool cannot tell them
@@ -154,7 +186,7 @@ cited for a specific finding.
   state reduction techniques, linking to Norris and Demsky, "A Practical Approach for Model
   Checking C/C++11 Code", *ACM TOPLAS*, 2016. [doi:10.1145/2806886](https://doi.org/10.1145/2806886)
 
-What this repository adds is not a new idea. It is two recorded instances of the failure
+What this repository adds is two recorded instances of the failure
 occurring in real tooling on a real crate, with the negative controls that establish them,
 and a grader that reads the artifacts those runs leave behind.
 
@@ -176,10 +208,14 @@ Environment that produced the recorded outputs: Darwin 24.6.0 arm64, `rustc 1.95
 ## Development
 
 ```sh
-python3 -m pytest tests/ -q
+python -m pip install -e . pytest
+python -m pytest tests/ -q        # 35 tests
 ```
 
-CI runs the same suite on every push. The two acceptance tests are
-`tests/test_case03_loom_discriminator.py` and `tests/test_case02_kani_vacuous.py`.
+CI (`.github/workflows/ci.yml`) installs the package the same way on Python 3.12 and runs
+the full suite on every push and pull request, after the three acceptance tests on their
+own: `tests/test_case03_loom_discriminator.py`, `tests/test_case02_kani_vacuous.py` and
+`tests/test_case04_lean_opaque.py`. It then runs the CLI on cases 03 and 02. Changes are
+listed in [CHANGELOG.md](CHANGELOG.md).
 
-MIT licensed.
+MIT licensed. Cite with [CITATION.cff](CITATION.cff).
