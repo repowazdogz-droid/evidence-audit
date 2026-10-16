@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: evidence-audit
+abstract: "A loom test prints `1 passed` on a build with a lost update; evidence-audit ranks it below the instrumented pass: 9 interleavings explored against 54."
+type: software
+authors:
+  - family-names: Smith
+    given-names: Warren
+version: "0.1"
+date-released: "2026-07-25"
+license: MIT
+repository-code: "https://github.com/repowazdogz-droid/evidence-audit"
+keywords:
+  - formal-verification
+  - kani
+  - loom
+  - lean4
+  - rust
